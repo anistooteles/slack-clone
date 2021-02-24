@@ -1,23 +1,43 @@
 import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Chat from './components/Chat';
+import Login from './components/Login';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import { useState } from 'react';
 
 function App() {
+  const [state, setState] = useState({
+    secondary: false,
+  });
+
+  const themeHandler = e => {
+    //console.log(e);
+    setState({ secondary: e });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="container">
+        <Header
+          onChangeTheme={themeHandler}
+          colorTheme={state.secondary}
+        ></Header>
+        <div className="main">
+          <Router>
+            <Switch>
+              <Route path="/room">
+                <Sidebar colorTheme={state.secondary}></Sidebar>
+                <Chat></Chat>
+              </Route>
+              <Route path="/">
+                <Login></Login>
+              </Route>
+            </Switch>
+          </Router>
+        </div>
+      </div>
     </div>
   );
 }
