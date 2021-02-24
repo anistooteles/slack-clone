@@ -27,11 +27,11 @@ function App() {
         <div className="main">
           <Router>
             <Switch>
-              <Route path="/room">
+              <Route path="/">
                 <Sidebar colorTheme={state.secondary}></Sidebar>
                 <Chat></Chat>
               </Route>
-              <Route path="/">
+              <Route path="/login">
                 <Login></Login>
               </Route>
             </Switch>
