@@ -75,12 +75,15 @@ $accent-alternate: #4a154b;
 }
 
 .container {
+  display: grid;
+  grid-template-rows: 42px 1fr;
   height: 100vh;
 }
 
 .main {
   display: flex;
   height: 100%;
+  min-width: 860px;
 }
 
 .sidebar {
@@ -161,5 +164,120 @@ $accent-alternate: #4a154b;
     &:hover {
       background-color: white;
     }
+  }
+}
+
+.chat {
+  &__buttons {
+    font-size: 12px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  &__container {
+    display: grid;
+    grid-template-rows: 63px auto min-content;
+    width: 100%;
+  }
+
+  &__header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+  }
+
+  &__body {
+  }
+
+  &__channel-desc {
+  }
+  &__channel-details {
+    display: flex;
+    align-items: center;
+  }
+
+  &__details-icon {
+    padding: 0 4px;
+    color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  &__description {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 13px;
+  }
+
+  &__name {
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 5px;
+  }
+
+  &__message {
+    display: flex;
+    padding: 20px;
+  }
+
+  &__msg-box {
+    width: 100%;
+    justify-content: space-between;
+    border: solid 1px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+
+    .MuiButtonBase-root {
+      background-color: transparent;
+      color: rgba(0, 0, 0, 0.7);
+      margin: 1px;
+      width: 20px;
+      min-width: unset;
+      &:hover {
+        background-color: #00000034;
+      }
+    }
+
+    input {
+      width: calc(100% - 6px);
+      border: none;
+      outline: none;
+      margin: 2px;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
+
+.message {
+  &__container {
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    padding: 8px 20px;
+    display: grid;
+    grid-template-columns: 36px auto;
+    grid-auto-rows: minmax(18px, auto);
+    column-gap: 8px;
+  }
+
+  &__name {
+    font-weight: 900;
+    margin-right: 5px;
+  }
+  &__date {
+    font-size: small;
+    color: rgba(0, 0, 0, 0.5);
+  }
+
+  &__img {
+    width: 100%;
+  }
+
+  &__text {
+    grid-column: 2 / 3;
+    font-size: small;
+    color: rgba(0, 0, 0, 0.7);
   }
 }

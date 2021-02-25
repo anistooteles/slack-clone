@@ -10,7 +10,10 @@ function SidebarItem({ item, colorTheme }) {
       }
     >
       {item.icon && <div className="sidebar-item__icon">{item.icon}</div>}
-      <div>{item.text}</div>
+      <div>
+        {!item.icon && '#'}
+        {item.name}
+      </div>
     </div>
   );
 }

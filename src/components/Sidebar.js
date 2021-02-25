@@ -1,10 +1,19 @@
 import React from 'react';
 import MessageIcon from '@material-ui/icons/Message';
-import { sidebarItems, sidebarChannels } from './SidebarData';
+import { sidebarItems } from './SidebarData';
 import SidebarItem from './SidebarItem';
 import AddIcon from '@material-ui/icons/Add';
+import db from '../firebase';
 
-function Sidebar({ colorTheme }) {
+function Sidebar({ colorTheme, rooms }) {
+  const addChannel = () => {
+    const promptName = prompt('Enter channel name');
+    console.log(promptName);
+    if (promptName) {
+      db.collection('rooms').add({ name: promptName });
+    }
+  };
+
   return (
     <div
       className={
@@ -37,11 +46,12 @@ function Sidebar({ colorTheme }) {
               : 'sidebar__message'
           }
         >
-          <AddIcon></AddIcon>
+          <AddIcon onClick={addChannel}></AddIcon>
         </div>
       </div>
-      {sidebarChannels.map((item, index) => (
-        <SidebarItem item={item} colorTheme={colorTheme} key={index} />
+      {console.log(rooms)}
+      {rooms.map(item => (
+        <SidebarItem item={item} colorTheme={colorTheme} key={item.id} />
       ))}
     </div>
   );

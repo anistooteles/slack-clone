@@ -5,25 +5,14 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 export const sidebarItems = [
   {
     icon: <ChatBubbleOutlineIcon />,
-    text: 'Threads',
+    name: 'Threads',
   },
   {
     icon: <AlternateEmailIcon />,
-    text: 'Mentions & reactions',
+    name: 'Mentions & reactions',
   },
   {
     icon: <AppsIcon />,
-    text: 'More',
-  },
-];
-export const sidebarChannels = [
-  {
-    text: '# Channel 1',
-  },
-  {
-    text: '# Channel 2',
-  },
-  {
-    text: '# Channel 3',
+    name: 'More',
   },
 ];
