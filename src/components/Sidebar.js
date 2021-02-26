@@ -4,13 +4,23 @@ import { sidebarItems } from './SidebarData';
 import SidebarItem from './SidebarItem';
 import AddIcon from '@material-ui/icons/Add';
 import db from '../firebase';
+import { useHistory } from 'react-router-dom';
 
 function Sidebar({ colorTheme, rooms }) {
   const addChannel = () => {
     const promptName = prompt('Enter channel name');
-    console.log(promptName);
+    //console.log(rooms);
     if (promptName) {
       db.collection('rooms').add({ name: promptName });
+    }
+  };
+
+  const history = useHistory();
+
+  const goToChannel = item => {
+    if (item.id) {
+      console.log(item.id);
+      history.push(`/room/${item.id}`);
     }
   };
 
@@ -34,7 +44,12 @@ function Sidebar({ colorTheme, rooms }) {
       </div>
       <div className="sidebar__menu">
         {sidebarItems.map((item, index) => (
-          <SidebarItem item={item} colorTheme={colorTheme} key={index} />
+          <SidebarItem
+            item={item}
+            colorTheme={colorTheme}
+            key={index}
+            onClick={() => goToChannel(item)}
+          />
         ))}
       </div>
       <div className="sidebar__channels">
@@ -49,9 +64,14 @@ function Sidebar({ colorTheme, rooms }) {
           <AddIcon onClick={addChannel}></AddIcon>
         </div>
       </div>
-      {console.log(rooms)}
+
       {rooms.map(item => (
-        <SidebarItem item={item} colorTheme={colorTheme} key={item.id} />
+        <SidebarItem
+          onClick={() => goToChannel(item)}
+          item={item}
+          colorTheme={colorTheme}
+          key={item.id}
+        />
       ))}
     </div>
   );

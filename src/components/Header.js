@@ -3,7 +3,8 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import Switch from '@material-ui/core/Switch';
 
-function Header({ onChangeTheme, colorTheme }) {
+function Header({ onChangeTheme, colorTheme, user, signOut }) {
+  //console.log(signOut);
   return (
     <div
       className={
@@ -31,8 +32,13 @@ function Header({ onChangeTheme, colorTheme }) {
             onChangeTheme(e.target.checked);
           }}
         ></Switch>
-        <span className="header__text">anistooteles</span>
-        <div className="header__user-img"></div>
+        <span className="header__text">{user.name}</span>
+
+        <img
+          onClick={signOut}
+          className="header__user-img"
+          src={user.photo ? user.photo : "'https://i.imgur.com/9pNffkj.png'"}
+        ></img>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import { useState, useEffect } from 'react';
 import db from './firebase';
+import { auth, provider } from './firebase';
 
 function App() {
   useEffect(() => {
@@ -18,6 +19,9 @@ function App() {
     rooms: [],
   });
 
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+
+  console.log('user in App state', user);
   const themeHandler = e => {
     //console.log(e);
     setState({ ...state, secondary: e });
@@ -36,27 +40,42 @@ function App() {
     });
   };
 
+  const signOutHandler = () => {
+    auth.signOut().then(() => {
+      localStorage.removeItem('user');
+      setUser(null);
+      console.log('Sign put');
+    });
+  };
+
   return (
     <div className="App">
-      <div className="container">
-        <Header
-          onChangeTheme={themeHandler}
-          colorTheme={state.secondary}
-        ></Header>
-        <div className="main">
-          <Router>
-            <Sidebar colorTheme={state.secondary} rooms={state.rooms}></Sidebar>
-            <Switch>
-              <Route path="/">
-                <Chat></Chat>
-              </Route>
-              <Route path="/login">
-                <Login></Login>
-              </Route>
-            </Switch>
-          </Router>
-        </div>
-      </div>
+      <Router>
+        {!user ? (
+          <Login setUser={setUser}></Login>
+        ) : (
+          <div className="container">
+            <Header
+              onChangeTheme={themeHandler}
+              colorTheme={state.secondary}
+              user={user}
+              signOut={signOutHandler}
+            ></Header>
+            <div className="main">
+              <Sidebar
+                colorTheme={state.secondary}
+                rooms={state.rooms}
+              ></Sidebar>
+              <Switch>
+                <Route path="/room/:channelId">
+                  <Chat user={user}></Chat>
+                </Route>
+                <Route path="/">Select or Create Channel</Route>
+              </Switch>
+            </div>
+          </div>
+        )}
+      </Router>
     </div>
   );
 }

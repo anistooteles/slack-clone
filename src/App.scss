@@ -58,6 +58,10 @@ $accent-alternate: #4a154b;
     background-size: cover;
     width: 30px;
     height: 30px;
+    margin-left: 5px;
+    border: white solid 1px;
+    border-radius: 5px;
+    cursor: pointer;
   }
 
   &__icon-button {
@@ -175,8 +179,9 @@ $accent-alternate: #4a154b;
   }
   &__container {
     display: grid;
-    grid-template-rows: 63px auto min-content;
+    grid-template-rows: 63px auto minmax(0, 100px);
     width: 100%;
+    height: calc(100vh - 63px);
   }
 
   &__header {
@@ -188,6 +193,9 @@ $accent-alternate: #4a154b;
   }
 
   &__body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
   }
 
   &__channel-desc {
@@ -279,5 +287,42 @@ $accent-alternate: #4a154b;
     grid-column: 2 / 3;
     font-size: small;
     color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+.login {
+  width: 100%;
+  height: 100vh;
+  background-color: #f8f8f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    padding: 100px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
+    img {
+      height: 100px;
+    }
+
+    button {
+      margin-top: 50px;
+      background-color: #fa769e63;
+      border: none;
+      height: 40px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 15px;
+
+      &:hover {
+        background-color: #fa769e91;
+      }
+    }
   }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import InfoIcon from '@material-ui/icons/Info';
 import SendIcon from '@material-ui/icons/Send';
 import Button from '@material-ui/core/Button';
@@ -7,13 +7,83 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 import AlternateEmailIcon from '@material-ui/icons/AlternateEmail';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
+import db from '../firebase';
+import { useParams } from 'react-router-dom';
+import firebase from 'firebase';
 
-function Chat() {
+function Chat({ user }) {
+  const myRef = useRef(null);
+
+  const executeScroll = () =>
+    myRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+      inline: 'nearest',
+    });
+
+  let { channelId } = useParams();
+
+  const [channel, setChannel] = useState();
+  const [messages, setMessages] = useState([]);
+
+  const [input, setInput] = useState('');
+
+  const sendMessage = e => {
+    e.preventDefault();
+
+    if (channelId) {
+      let payload = {
+        text: input,
+        timestamp: firebase.firestore.Timestamp.now(),
+        user: user.name,
+        userImage: user.photo,
+      };
+      if (input !== '')
+        db.collection('rooms')
+          .doc(channelId)
+          .collection('messages')
+          .add(payload);
+      //console.log(payload);
+      setInput('');
+      executeScroll();
+    }
+  };
+
+  const getMessages = () => {
+    db.collection('rooms')
+      .doc(channelId)
+      .collection('messages')
+      .orderBy('timestamp', 'asc')
+      .onSnapshot(snapshot => {
+        let messages = snapshot.docs.map(doc => doc.data());
+        setMessages(messages);
+        console.log(messages);
+      });
+  };
+
+  //getMessages();
+
+  const getChannel = () => {
+    console.log('ID:', channelId);
+    db.collection('rooms')
+      .doc(channelId)
+      .onSnapshot(snapshot => {
+        console.log('CHANNEL:', snapshot.data());
+        setChannel(snapshot.data());
+      });
+  };
+
+  useEffect(() => {
+    console.log('ID:', channelId);
+    getChannel();
+    getMessages();
+  }, [channelId]);
+
   return (
     <div className="chat__container">
       <div className="chat__header">
         <div className="chat__channel-desc">
-          <div className="chat__name">#channel</div>
+          <div className="chat__name">#{channel && channel.name}</div>
           <div className="chat__description">description</div>
         </div>
         <div className="chat__channel-details">
@@ -24,22 +94,25 @@ function Chat() {
         </div>
       </div>
       <div className="chat__body">
-        <Message
-          img="https://i.imgur.com/9pNffkj.png"
-          text="¡hola! :) ¿COMPRENDE? Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
-          name="@ani"
-          date="31-12-9999 01:00:00 am"
-        ></Message>
-        <Message
-          img="https://i.imgur.com/9pNffkj.png"
-          text="¡hola! :) ¿COMPRENDE? Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum"
-          name="@ani"
-          date="31-12-9999 01:00:00 am"
-        ></Message>
+        {messages.map((message, index) => (
+          <Message
+            img={message.userImage}
+            text={message.text}
+            name={message.user}
+            date={new Date(message.timestamp.toDate()).toUTCString()}
+            key={index}
+          ></Message>
+        ))}
+        <span ref={myRef}></span>
       </div>
       <div className="chat__message">
         <form className="chat__msg-box">
-          <input type="text" placeholder="Message..."></input>
+          <input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            type="text"
+            placeholder="Message..."
+          ></input>
           <div className="chat__buttons">
             <Button className="chat__sent-button" aria-label="delete">
               <FormatColorTextIcon fontSize="inherit"></FormatColorTextIcon>
@@ -54,7 +127,13 @@ function Chat() {
               <AttachmentIcon fontSize="inherit"></AttachmentIcon>
             </Button>
 
-            <Button className="chat__sent-button" aria-label="delete">
+            <Button
+              disabled={input === ''}
+              onClick={e => sendMessage(e)}
+              className="chat__sent-button"
+              aria-label="delete"
+              type="submit"
+            >
               <SendIcon fontSize="inherit"></SendIcon>
             </Button>
           </div>

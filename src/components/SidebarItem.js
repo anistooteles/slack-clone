@@ -1,8 +1,11 @@
 import React from 'react';
 
-function SidebarItem({ item, colorTheme }) {
+function SidebarItem({ item, colorTheme, onClick }) {
   return (
     <div
+      onClick={() => {
+        onClick(item);
+      }}
       className={
         colorTheme
           ? 'sidebar-item sidebar-item--alternate'
